@@ -12,6 +12,7 @@ class Espina: public Bombas{
 
     public:
         Espina();
+        Espina(int, int);
         
         int getCantidad();
         void aumentarBombas();

@@ -13,7 +13,7 @@ using namespace std;
 class Escenario{
     private:
         string nombre;
-        Item*** matriz[11][13];
+        Item*** matriz;
         vector<Bombas*> bombas;
 
     public:
@@ -21,7 +21,8 @@ class Escenario{
         Escenario();
 
         void setNombre(string);
-    
+        Item*** getMatriz();
+        void Impresion();
         ~Escenario();
 
 

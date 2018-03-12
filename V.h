@@ -10,6 +10,7 @@ class V:public Bombas{
         
     public:
         V();
+        V(int, int);
         ~V();
 };
 

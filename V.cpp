@@ -8,6 +8,9 @@ V::V():Bombas(){
 
 }
 
+V::V(int x, int y):Bombas(x, y){
+
+}
 
 V::~V(){
 

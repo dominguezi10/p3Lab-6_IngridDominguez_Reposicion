@@ -31,6 +31,15 @@ void Item::setY(int y){
     this->y = y;
 }
 
+void Item::setSalida(string salida){
+    this->salida = salida;
+}
+
+string Item::getSalida(){
+    return salida;
+}
+
+
 Item::~Item(){
 }
 

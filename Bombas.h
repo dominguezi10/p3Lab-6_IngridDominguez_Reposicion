@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-
+#include "Item.h"
 using namespace std;
 
 #ifndef BOMBAS_H
@@ -8,7 +8,7 @@ using namespace std;
 
 
 //Inicio clase
-class Bombas{
+class Bombas:public Item{
 
     //Atributos
     private:
@@ -18,6 +18,7 @@ class Bombas{
     //metodos publicos
     public:
         Bombas();
+        Bombas(int, int);
 
         //metodos accersores / mutadores
         int getContador();

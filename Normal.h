@@ -21,6 +21,7 @@ class Normal: public Bombas{
         //prototipos de metodos
         //constructor
         Normal();
+        Normal(int, int);
 
         //metodos accersores / mutadores
         int getAlcance();

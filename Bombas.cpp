@@ -1,4 +1,5 @@
 #include "Bombas.h"
+#include "Item.h"
 #include <iostream>
 #include <string>
 
@@ -9,6 +10,10 @@ Bombas::Bombas(){
     this->contador=3;
 }//Fin constructor
 
+
+Bombas::Bombas(int x , int y):Item(x,y){
+     this->contador=3;
+}
 
 int Bombas::getContador(){
     return contador;

@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-#include "Bombas.h"
+//#include "Bombas.h"
 #include <vector>
 using namespace std;
 
@@ -13,6 +13,7 @@ class Item{
     private:
         int x;
         int y;
+        string salida;
         //vector<Bombas*> bombas;
 
     public:
@@ -22,6 +23,8 @@ class Item{
         void setX(int);
         int getY();
         void setY(int);
+        string getSalida();
+        void setSalida(string);
 
     ~Item();
 
