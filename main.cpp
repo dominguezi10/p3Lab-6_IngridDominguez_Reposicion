@@ -584,7 +584,8 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
     cy = 0;
     curs_set(0);
     erase();
-    //matriz[0][0] = jugador;
+    matriz[0][0] = jugador;
+    matriz[0][0]->setSalida("*");
     for(int i=0; i<11; i++){
         for(int j = 0; j<13; j++){
             if (( j%2!=0 && i%2!=0)){    
@@ -594,7 +595,6 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
     }
 
     
-
     
     while (true){
         refresh();
@@ -629,7 +629,9 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                 condicion = validacionMovimiento(matriz,(cy - 1) , cx);
                 if(condicion == 1){
                     cy = cy - 1;
+                    matriz[cy][cx] = jugador;
                     matriz[cy][cx]->setSalida("*");
+                    matriz[cy+1][cx] = new Item();
                     matriz[cy+1][cx]->setSalida(" ");
                 }
             }
@@ -638,7 +640,9 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                 condicion = validacionMovimiento(matriz, cy  , cx-1);
                 if(condicion == 1){
                     cx = cx - 1;
+                    matriz[cy][cx] = jugador;
                     matriz[cy][cx]->setSalida("*");
+                    matriz[cy][cx+1] = new Item();
                     matriz[cy][cx+1]->setSalida(" ");
                 }
             }
@@ -648,7 +652,9 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                 condicion = validacionMovimiento(matriz, cy  , cx+1);
                 if(condicion == 1){
                     cx = cx + 1;
+                    matriz[cy][cx] = jugador;
                     matriz[cy][cx]->setSalida("*");
+                    matriz[cy][cx-1] = new Item();
                     matriz[cy][cx-1]->setSalida(" ");
                 }
             }
@@ -656,7 +662,9 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                 condicion = validacionMovimiento(matriz, cy+1, cx);
                 if(condicion == 1){
                     cy = cy + 1;
+                    matriz[cy][cx] = jugador;
                     matriz[cy][cx]->setSalida("*");
+                    matriz[cy-1][cx] = new Item();
                     matriz[cy-1][cx]->setSalida(" ");
                 }
             }
@@ -665,54 +673,6 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
 
         impresion(matriz);
         refresh();
-
-        /*if ( ( (cx >=0 && cy >=0) && (cx < 13 && cy < 11) )   && (direccion>=1 && direccion<=4) ){
-            if (direccion == 1 && (cy-1 >=0) ){
-                condicion = validacionMovimiento(matriz,(cy - 1) , cx);
-                if(condicion == 1){
-                    cy = cy - 1;
-
-                    move(cy + 1, cx);
-                    printw(" "); 
-                }
-                
-                
-                
-            }
-            if (direccion == 2 && (cx-1 >=0) ){
-                cx = cx - 1;
-                move(cy, cx + 1);
-                printw(" ");
-                
-
-                
-            }
-            if (direccion == 3 && (cx+1 <13))
-            {
-                cx = cx + 1;
-                move(cy, cx - 1);
-                printw(" ");
-            }
-            if (direccion == 4 && (cy+1 <11) )
-            {
-                cy = cy + 1;
-                move(cy - 1, cx);
-                printw(" ");
-            }
-
-            if ((cx >=0 && cy >=0) ){
-                move(cy, cx);
-                printw("*");
-                refresh();
-                usleep(1000000 / 4);
-            }
-            //}
-            refresh();
-            direccion = 0;
-        }else if(tecla == 10){
-            break;
-        } */
-        
         
     }
     move(y / 2, (x / 2 - 4));
