@@ -559,10 +559,19 @@ void movimiento(){
 void movimientoConMatriz(Item***  matriz, Jugador* jugador){
     erase();
     noecho();
+
+    ////
+    Jugador* villano1 = new Jugador("in",1,2, 0,12);
+    Jugador* villano2 = new Jugador("in",1,2, 10,12);
+    Jugador* villano3 = new Jugador("in",1,2, 5,6);
+    Jugador* villano4 = new Jugador("in",1,2, 10,0);
+    
+    ///
+
     //char ser = '*';
     int x, y;
-    int cx = 1;
-    int cy = 1;
+    int cx;
+    int cy;
     getmaxyx(stdscr, y, x);
     move(y / 2, x / 2 - 18);
     start_color();
@@ -586,6 +595,17 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
     erase();
     matriz[0][0] = jugador;
     matriz[0][0]->setSalida("*");
+
+    matriz[0][12] = villano1;
+    matriz[0][12]->setSalida("X");
+    matriz[10][12] = villano2;
+    matriz[10][12]->setSalida("X");
+    matriz[5][6] = villano3;
+    matriz[5][6]->setSalida("X");
+    matriz[10][0] = villano4;
+    matriz[10][0]->setSalida("X");
+
+
     for(int i=0; i<11; i++){
         for(int j = 0; j<13; j++){
             if (( j%2!=0 && i%2!=0)){    
@@ -633,6 +653,9 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                     matriz[cy][cx]->setSalida("*");
                     matriz[cy+1][cx] = new Item();
                     matriz[cy+1][cx]->setSalida(" ");
+                }else if(condicion == 3){
+                    erase();
+                    break;
                 }
             }
 
@@ -644,6 +667,9 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                     matriz[cy][cx]->setSalida("*");
                     matriz[cy][cx+1] = new Item();
                     matriz[cy][cx+1]->setSalida(" ");
+                }else if(condicion == 3){
+                    erase();
+                    break;
                 }
             }
 
@@ -656,6 +682,9 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                     matriz[cy][cx]->setSalida("*");
                     matriz[cy][cx-1] = new Item();
                     matriz[cy][cx-1]->setSalida(" ");
+                }else if(condicion == 3){
+                    erase();
+                    break;
                 }
             }
             if (direccion == 4 && (cy+1 <11) ){
@@ -666,11 +695,14 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador){
                     matriz[cy][cx]->setSalida("*");
                     matriz[cy-1][cx] = new Item();
                     matriz[cy-1][cx]->setSalida(" ");
+                }else if(condicion == 3){
+                    erase();
+                    break;
                 }
             }
         }
 
-
+        direccion = 0;
         impresion(matriz);
         refresh();
         
@@ -692,6 +724,10 @@ int validacionMovimiento(Item*** matriz , int x, int y){
 
     if(salida == "@"){
         return 0;
+    }
+
+    if(salida == "X"){
+        return 3;
     }
 
     return 1;
