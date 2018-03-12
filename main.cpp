@@ -15,12 +15,10 @@ using namespace std;
 
 void salir();
 int menu();
-void movimiento();
 int kbhit(void);
 
 Jugador* crearJugador(int);
 int tipoBomba();
-void movimientoInvisible();
 void movimientoTren();
 void movimientoConMatriz(Item***, Jugador*);
 int validacionMovimiento(Item***, int, int);
@@ -233,110 +231,6 @@ void salir()
     exit(0);
 }
 
-void movimientoInvisible(){
-    erase();
-    char ser = '*';
-    int x, y;
-    int enX;
-    int enY;
-    getmaxyx(stdscr, y, x);
-    
-    start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    //refresh();
-    move(0,0);
-    printw("A JUGAR...... (MUEVETE!!)");
-    refresh();
-    int direccion = 3;
-    enX = 0;
-    enY = 2;
-    curs_set(0);
-    erase();
-    int tecla;
-    tecla = getch();
-    while (true)
-    {
-        /*for(int i= 2; i<13; i++){
-            for(int j=0; j<13; i++ ){
-                if(i == 5){
-                    move(i, j);
-                    printw("+");
-                    refresh();   
-                }
-            }
-        }*/
-        if (kbhit())
-        {
-            tecla = getch();
-            //ARRIBA
-            if (tecla == 119)
-            {
-                direccion = 1;
-            }
-            //IZQUIERDA
-            if (tecla == 97)
-            {
-                direccion = 2;
-            }
-            //DERECHA
-            if (tecla == 100)
-            {
-                direccion = 3;
-            }
-            //ABAJO
-            if (tecla == 115)
-            {
-                direccion = 4;
-            }
-
-            if(tecla == 10){
-                move(enY, enX);
-                printw("O");
-                refresh();
-            }
-        }
-        if ((enX > -1 && enY > 1) && (enX < 13 && enY < 11))
-        {
-            move(enY, enX);
-            printw("*");
-            refresh();
-            usleep(1000000 / 4);
-            if (direccion == 1)
-            {
-                enY = enY - 1;
-                move(enY + 1, enX);
-                printw(" ");
-            }
-            if (direccion == 2)
-            {
-                enX = enX - 1;
-                move(enY, enX + 1);
-                printw(" ");
-            }
-            if (direccion == 3)
-            {
-                enX = enX + 1;
-                move(enY, enX - 1);
-                printw(" ");
-            }
-            if (direccion == 4)
-            {
-                enY = enY + 1;
-                move(enY - 1, enX);
-                printw(" ");
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-    move(y / 2, (x / 2 - 4));
-    printw("Perdió!!");
-    refresh();
-    usleep(1000000 / 2);
-    curs_set(1);
-}
 
 
 void movimientoTren(){
@@ -433,125 +327,7 @@ void movimientoTren(){
 
 
 
-void movimiento(){
-    erase();
-    noecho();
-    //char ser = '*';
-    int x, y;
-    int cx = 1;
-    int cy = 1;
-    getmaxyx(stdscr, y, x);
-    move(y / 2, x / 2 - 18);
-    start_color();
-    init_pair(1, COLOR_RED, COLOR_BLACK);
-    attron(COLOR_PAIR(1));
-    printw("Presione cualquier tecla para inciar.");
-    move(y / 2 + 1, x / 2 - 29);
-    printw("*Las teclas sólo funcionarán sin no está activo BLOQ MAYUS*");
-    refresh();
-    attroff(COLOR_PAIR(1));
-    int tecla;
-    tecla = getch();
-    while (tecla<=0){
-        tecla = getch();
-    }
-    /////**********************
-    /*erase();
-    getmaxyx(stdscr, y, x);
-    move(y / 2 + 1, x / 2 - 29);
-    printw("* MUEVETE !!! (aswd) *");
-    refresh();*/
-    int direccion = 3;
-    cx = 0;
-    cy = 0;
-    curs_set(0);
-    erase();
-    
-    refresh();
-    while (true){
-        tecla = getch();
-            //ARRIBA
-        if (tecla == 119){
-            direccion = 1;
-        }
-        //IZQUIERDA
-        if (tecla == 97){
-            direccion = 2;
-        }
-        //DERECHA
-        if (tecla == 100){
-            direccion = 3;
-        }
-        //ABAJO
-        if (tecla == 115){
-            direccion = 4;
-        }
 
-        for(int i= 0; i<13; i++){
-            for(int j=0; j<11; j++){
-                if (( j%2!=0 && i%2!=0)){    
-                    move(j,i);
-                    printw("@");
-                    
-                    //usleep(1000000 / 4);
-                }
-            }
-        }
-
-        
-        if ( ( (cx >=0 && cy >=0) && (cx < 13 && cy < 11) )   && (direccion>=1 && direccion<=4) ){
-            //if( !(cy%2!=0 && cx%2!=0)){
-
-            
-            if (direccion == 1 && (cy-1 >=0) ){
-                cy = cy - 1;
-                move(cy + 1, cx);
-                printw(" ");
-                
-                
-                
-            }
-            if (direccion == 2 && (cx-1 >=0) ){
-                cx = cx - 1;
-                move(cy, cx + 1);
-                printw(" ");
-                
-
-                
-            }
-            if (direccion == 3 && (cx+1 <13))
-            {
-                cx = cx + 1;
-                move(cy, cx - 1);
-                printw(" ");
-            }
-            if (direccion == 4 && (cy+1 <11) )
-            {
-                cy = cy + 1;
-                move(cy - 1, cx);
-                printw(" ");
-            }
-
-            if ((cx >=0 && cy >=0) ){
-                move(cy, cx);
-                printw("*");
-                refresh();
-                usleep(1000000 / 4);
-            }
-            //}
-            direccion = 0;
-        }else if(tecla == 10){
-            break;
-        } 
-        
-        
-    }
-    move(y / 2, (x / 2 - 4));
-    printw("Perdió!!");
-    refresh();
-    usleep(1000000 / 2);
-    curs_set(1);
-}
 
 
 
