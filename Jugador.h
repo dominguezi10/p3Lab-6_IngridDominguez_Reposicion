@@ -16,7 +16,6 @@ class Jugador:public Item{
         int estado;
         int tipo;
 
-
     //metodos publicos
     public:
         //prototipos de metodos
@@ -31,6 +30,8 @@ class Jugador:public Item{
         void setEstado(int);
         int getTipo();
         void setTipo(int);
+
+        
 
     //Destructor
     ~Jugador();

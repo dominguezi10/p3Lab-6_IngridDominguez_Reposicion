@@ -30,7 +30,16 @@ Item*** Escenario::getMatriz(){
 }
 
 Escenario:: ~Escenario(){
-    //cout<< "eliminado..."<< endl;
+    for (int i = 0; i < 11; i++) {
+        for (int j = 0; j < 13; j++) {
+            delete matriz[i][j];
+            matriz[i][j] = NULL;
+        }
+        delete matriz[i];
+        matriz[i] = NULL;
+    }
+    delete[] matriz;
+    matriz = NULL;
 }
 
 void Escenario:: setNombre(string nombre){

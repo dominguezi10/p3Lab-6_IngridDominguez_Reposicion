@@ -22,7 +22,9 @@ Jugador* crearJugador(int);
 int tipoBomba();
 void movimientoInvisible();
 void movimientoTren();
-void movimientoConMatriz(Item***);
+void movimientoConMatriz(Item***, Jugador*);
+int validacionMovimiento(Item***, int, int);
+void impresion(Item***);
 
 int main(void){
     Escenario* escenario;
@@ -45,14 +47,14 @@ int main(void){
             jugador = crearJugador(1);
 
             escenario = new Invisible(nombreE);
-
+            
             int opcion ;
             opcion = tipoBomba();
 
             //movimientoInvisible();
             //movimiento();
             Item*** matriz  = escenario->getMatriz();
-            movimientoConMatriz(matriz);
+            movimientoConMatriz(matriz, jugador);
             refresh();
             usleep(1000000);
             
@@ -554,7 +556,7 @@ void movimiento(){
 
 
 /////*****
-void movimientoConMatriz(Item***  matriz){
+void movimientoConMatriz(Item***  matriz, Jugador* jugador){
     erase();
     noecho();
     //char ser = '*';
@@ -582,6 +584,7 @@ void movimientoConMatriz(Item***  matriz){
     cy = 0;
     curs_set(0);
     erase();
+    //matriz[0][0] = jugador;
     for(int i=0; i<11; i++){
         for(int j = 0; j<13; j++){
             if (( j%2!=0 && i%2!=0)){    
@@ -590,19 +593,16 @@ void movimientoConMatriz(Item***  matriz){
         }
     }
 
-    for(int i= 0; i<11; i++){
-        for(int j= 0; j<13; j++){
-            move(i,j);
-            string est;
-            est = matriz[i][j]->getSalida();
-            char s;
-            s = est.at(0);
-            printw("%c", s);
-        }
-    }
+    
 
-    refresh();
-    /*while (true){
+    
+    while (true){
+        refresh();
+        impresion(matriz);
+
+
+        refresh();
+        
         tecla = getch();
             //ARRIBA
         if (tecla == 119){
@@ -621,26 +621,60 @@ void movimientoConMatriz(Item***  matriz){
             direccion = 4;
         }
 
-        for(int i= 0; i<13; i++){
-            for(int j=0; j<11; j++){
-                if (( j%2!=0 && i%2!=0)){    
-                    move(j,i);
-                    printw("@");
-                    
-                    //usleep(1000000 / 4);
+
+
+        int condicion;
+        if ( ( (cx >=0 && cy >=0) && (cx < 13 && cy < 11) )   && (direccion>=1 && direccion<=4) ){
+            if(direccion == 1  && (cy-1 >=0) ){
+                condicion = validacionMovimiento(matriz,(cy - 1) , cx);
+                if(condicion == 1){
+                    cy = cy - 1;
+                    matriz[cy][cx]->setSalida("*");
+                    matriz[cy+1][cx]->setSalida(" ");
+                }
+            }
+
+            if(direccion == 2  && (cx-1 >=0) ){
+                condicion = validacionMovimiento(matriz, cy  , cx-1);
+                if(condicion == 1){
+                    cx = cx - 1;
+                    matriz[cy][cx]->setSalida("*");
+                    matriz[cy][cx+1]->setSalida(" ");
+                }
+            }
+
+             if (direccion == 3 && (cx+1 <13))
+            {
+                condicion = validacionMovimiento(matriz, cy  , cx+1);
+                if(condicion == 1){
+                    cx = cx + 1;
+                    matriz[cy][cx]->setSalida("*");
+                    matriz[cy][cx-1]->setSalida(" ");
+                }
+            }
+            if (direccion == 4 && (cy+1 <11) ){
+                condicion = validacionMovimiento(matriz, cy+1, cx);
+                if(condicion == 1){
+                    cy = cy + 1;
+                    matriz[cy][cx]->setSalida("*");
+                    matriz[cy-1][cx]->setSalida(" ");
                 }
             }
         }
 
-        
-        if ( ( (cx >=0 && cy >=0) && (cx < 13 && cy < 11) )   && (direccion>=1 && direccion<=4) ){
-            //if( !(cy%2!=0 && cx%2!=0)){
 
-            
+        impresion(matriz);
+        refresh();
+
+        /*if ( ( (cx >=0 && cy >=0) && (cx < 13 && cy < 11) )   && (direccion>=1 && direccion<=4) ){
             if (direccion == 1 && (cy-1 >=0) ){
-                cy = cy - 1;
-                move(cy + 1, cx);
-                printw(" ");
+                condicion = validacionMovimiento(matriz,(cy - 1) , cx);
+                if(condicion == 1){
+                    cy = cy - 1;
+
+                    move(cy + 1, cx);
+                    printw(" "); 
+                }
                 
                 
                 
@@ -673,13 +707,14 @@ void movimientoConMatriz(Item***  matriz){
                 usleep(1000000 / 4);
             }
             //}
+            refresh();
             direccion = 0;
         }else if(tecla == 10){
             break;
-        } 
+        } */
         
         
-    }*/
+    }
     move(y / 2, (x / 2 - 4));
     printw("Perdió!!");
     refresh();
@@ -687,6 +722,35 @@ void movimientoConMatriz(Item***  matriz){
     curs_set(1);
 }
 //*****
+
+
+
+int validacionMovimiento(Item*** matriz , int x, int y){
+    int condicion;
+    string salida;
+    salida = matriz[x][y]->getSalida();
+
+    if(salida == "@"){
+        return 0;
+    }
+
+    return 1;
+}
+
+void impresion(Item*** matriz){
+    for(int i=0; i<11; i++){
+        for(int j = 0; j<13; j++){
+            
+            move(i,j);
+            string est;
+            est = matriz[i][j]->getSalida();
+            char s;
+            s = est.at(0);
+            printw("%c", s);
+        }
+    }
+}// imprimimos en pantalla
+
 int kbhit(void)
 {
     struct timeval timeout;
