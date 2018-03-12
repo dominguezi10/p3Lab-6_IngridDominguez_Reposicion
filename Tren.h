@@ -12,12 +12,18 @@ using namespace std;
 class Tren: public Escenario{
     private:
         vector<int> posiciones;
-        int dondeEsta;
+        int dondeEstaX;
+        int dondeEstaY;
+        int tipoBomba;
 
     public:
-        Tren(string);
-        int getDondeEsta();
-        void setDondeEsta(int);
+        Tren(string, int, int);
+        void setDondeEstaX(int);
+        int getDondeEstaX();
+
+        void setDondeEstaY(int);
+        int getDondeEstaY();       
+        int tipoBombaUsar();
 
         ~Tren();
 

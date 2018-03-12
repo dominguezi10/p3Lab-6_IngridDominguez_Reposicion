@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
-
+#include "Bombas.h"
+#include <vector>
 using namespace std;
 
 #ifndef ITEM_H
@@ -12,6 +13,8 @@ class Item{
     private:
         int x;
         int y;
+        //vector<Bombas*> bombas;
+
     public:
         Item();
         Item(int,int);
@@ -19,7 +22,7 @@ class Item{
         void setX(int);
         int getY();
         void setY(int);
-	virtual string toString();
+
     ~Item();
 
 

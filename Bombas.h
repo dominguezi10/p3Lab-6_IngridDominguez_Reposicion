@@ -17,11 +17,8 @@ class Bombas{
 
     //metodos publicos
     public:
-        //prototipos de metodos
-        //constructor
         Bombas();
-        Bombas(int);
-	//virtual explosion();
+
         //metodos accersores / mutadores
         int getContador();
         void setContador(int);

@@ -1,29 +1,25 @@
 #include "Normal.h"
+#include "Bombas.h"
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-Normal::Normal(int alcance)
-{
-    this->alcance = alcance;
-}
-Normal::Normal()
-{
+Normal::Normal():Bombas(){
+    this->alcance = rand()% 4+1;
 }
 
-int Normal::getAlcance()
-{
+
+int Normal::getAlcance(){
     return alcance;
 }
 
-void Normal::setAlcance(int alcance)
-{
+void Normal::setAlcance(int alcance){
     this->alcance = alcance;
 }
 
-Normal::~Normal()
-{
+Normal::~Normal(){
 }
 
 

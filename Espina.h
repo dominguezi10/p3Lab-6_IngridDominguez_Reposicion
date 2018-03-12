@@ -8,16 +8,14 @@ using namespace std;
 
 class Espina: public Bombas{
     private:
-        string simbolo;
-        int cantidad;
+        int bombasPuestas;
+
     public:
         Espina();
-        Espina(string,int);
-        string getSimbolo();
-        void setSimbolo(string);
+        
         int getCantidad();
-        void setCantidad(int);
-	string toString();
+        void aumentarBombas();
+        
     ~Espina();
 
 
