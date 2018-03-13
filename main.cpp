@@ -302,6 +302,17 @@ void movimientoTren(Item*** matriz, Jugador* jugador){
         for(int j = 0; j<13; j++){
             if (( j%2!=0 && i%2!=0)){    
                 matriz[i][j]->setSalida("@");
+            }else if(i==2 && (j>=4 && j<=8)){
+                matriz[i][j]->setSalida("U");
+            }
+            if((i>=2 && i<=8 )&& j==8){
+                matriz[i][j]->setSalida("U");
+            }
+            if((i>=7 && i<=8) && j==4){
+                matriz[i][j]->setSalida("U");
+            }
+            if(i==8 && (j>=4 && j<=8)){
+                matriz[i][j]->setSalida("U");
             }
         }
     }
@@ -944,6 +955,10 @@ int validacionMovimiento(Item*** matriz , int x, int y){
         return 2;
     }
 
+    if(salida == "U"){
+        return 8;
+    }
+
     return 1;
 }
 
@@ -975,7 +990,7 @@ void movimientoVillanos(Item*** &matriz){
             if(matriz[i][j]->getSalida() == "X" ){
                 if(direccion== 1 && (i-1)>=0){
                     condicion = validacionMovimiento(matriz, i-1, j);
-                    if(condicion!=0 && condicion!=3 && condicion!=2){
+                    if(condicion!=0 && condicion!=3 && condicion!=2 && condicion!=8){
                         Item* temporal = matriz[i][j];
                         matriz[i-1][j] = temporal;
                         matriz[i][j] = new Item();
@@ -986,7 +1001,7 @@ void movimientoVillanos(Item*** &matriz){
 
                 if(direccion== 2 && (j-1)>=0){
                     condicion = validacionMovimiento(matriz, i, j-1);
-                    if(condicion!=0 && condicion!=3 && condicion!=2){
+                    if(condicion!=0 && condicion!=3 && condicion!=2 && condicion!=8){
                         Item* temporal = matriz[i][j];
                         matriz[i][j-1] = temporal;
                         matriz[i][j] = new Item();
@@ -997,7 +1012,7 @@ void movimientoVillanos(Item*** &matriz){
 
                 if(direccion== 3 && (j+1)<13){
                     condicion = validacionMovimiento(matriz, i, j+1);
-                    if(condicion!=0 && condicion!=3 && condicion!=2){
+                    if(condicion!=0 && condicion!=3 && condicion!=2 && condicion!=8){
                         Item* temporal = matriz[i][j];
                         matriz[i][j+1] = temporal;
                         matriz[i][j] = new Item();
@@ -1008,7 +1023,7 @@ void movimientoVillanos(Item*** &matriz){
 
                 if(direccion== 4 && (i+1)<11){
                     condicion = validacionMovimiento(matriz, i+1, j);
-                    if(condicion!=0 && condicion!=3 && condicion!=2){
+                    if(condicion!=0 && condicion!=3 && condicion!=2 && condicion!=8){
                         Item* temporal = matriz[i][j];
                         matriz[i+1][j] = temporal;
                         matriz[i][j] = new Item();
@@ -1042,7 +1057,7 @@ void explotarBombas(Item*** &matriz){
                 int condicion;
                 if(i-1>=0){
                     condicion = validacionMovimiento(matriz, i-1,j);
-                    if(condicion !=2 && condicion!=0){
+                    if(condicion !=2 && condicion!=0 && condicion!=8){
                         matriz[i-1][j] = new Item();
                         matriz[i-1][j]->setSalida(" ");
                         matriz[i][j] = new Item();
@@ -1053,7 +1068,7 @@ void explotarBombas(Item*** &matriz){
 
                 if(i+1<11){
                     condicion = validacionMovimiento(matriz, i+1,j);
-                    if(condicion !=2 && condicion!=0){
+                    if(condicion !=2 && condicion!=0 && condicion!=8){
                         matriz[i+1][j] = new Item();
                         matriz[i+1][j]->setSalida(" ");
                         matriz[i][j] = new Item();
@@ -1064,7 +1079,7 @@ void explotarBombas(Item*** &matriz){
                 
                 if(j+1<13){
                     condicion = validacionMovimiento(matriz, i,j+1);
-                    if(condicion !=2 && condicion!=0){
+                    if(condicion !=2 && condicion!=0 && condicion!=8){
                         matriz[i][j+1] = new Item();
                         matriz[i][j+1]->setSalida(" ");
                         matriz[i][j] = new Item();
@@ -1075,7 +1090,7 @@ void explotarBombas(Item*** &matriz){
 
                 if(j-1>=0){
                     condicion = validacionMovimiento(matriz, i,j-1);
-                    if(condicion !=2 && condicion!=0){
+                    if(condicion !=2 && condicion!=0 && condicion!=8){
                         matriz[i][j-1] = new Item();
                         matriz[i][j-1]->setSalida(" ");
                         matriz[i][j] = new Item();
