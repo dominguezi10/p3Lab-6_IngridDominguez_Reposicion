@@ -32,6 +32,7 @@ int validacionMovimiento(Item***, int, int);
 void impresion(Item***);
 void movimientoVillanos(Item***&);
 int verInstancia(Item***);
+void explotarBombas(Item***&);
 
 int main(void){
     
@@ -355,8 +356,8 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
 
     //char ser = '*';
     int x, y;
-    int cx;
-    int cy;
+    int posicionX;
+    int posicionY;
     getmaxyx(stdscr, y, x);
     move(y / 2, x / 2 - 18);
     start_color();
@@ -374,8 +375,8 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
     }
     
     int direccion = 3;
-    cx = 0;
-    cy = 0;
+    posicionX = 0;
+    posicionY = 0;
     curs_set(0);
     erase();
     matriz[0][0] = jugador;
@@ -411,14 +412,6 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
             condicion = validacionMovimiento(matriz, pY, pX);
             
         }
-
-        move(i, 55);
-            printw("%i", condicion);
-        move(i, 45);
-        printw("%i", pX);
-         move(i, 40);
-        printw("%i", pY);
-
         
 
         if( (opcionBomba == 1 && condicion ==1)&& (pX>=0 && pY>=0)){
@@ -451,7 +444,8 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
     printw("%i", vida);
     
 
-
+    int pasos;
+    pasos = 0;
     while (true){
         refresh();
         impresion(matriz);
@@ -481,71 +475,108 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
         
 
         int condicion;
-        if ( ( (cx >=0 && cy >=0) && (cx < 13 && cy < 11) )   && (direccion>=1 && direccion<=4) ){
-            if(direccion == 1  && (cy-1 >=0) ){
-                condicion = validacionMovimiento(matriz,(cy - 1) , cx);
+        if ( ( (posicionX >=0 && posicionY >=0) && (posicionX < 13 && posicionY < 11) )   && (direccion>=1 && direccion<=4) ){
+            if(direccion == 1  && (posicionY-1 >=0) ){
+                condicion = validacionMovimiento(matriz,(posicionY - 1) , posicionX);
                 if(condicion == 1){
-                    cy = cy - 1;
-                    matriz[cy][cx] = jugador;
-                    matriz[cy][cx]->setSalida("*");
-                    matriz[cy+1][cx] = new Item();
-                    matriz[cy+1][cx]->setSalida(" ");
+                    posicionY = posicionY - 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY+1][posicionX] = new Item();
+                    matriz[posicionY+1][posicionX]->setSalida(" ");
                     
                     
                 }else if(condicion == 3){
-                    erase();
-                    break;
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
+                    
                 }
             }
 
-            if(direccion == 2  && (cx-1 >=0) ){
-                condicion = validacionMovimiento(matriz, cy  , cx-1);
+            if(direccion == 2  && (posicionX-1 >=0) ){
+                condicion = validacionMovimiento(matriz, posicionY  , posicionX-1);
                 if(condicion == 1){
-                    cx = cx - 1;
-                    matriz[cy][cx] = jugador;
-                    matriz[cy][cx]->setSalida("*");
-                    matriz[cy][cx+1] = new Item();
-                    matriz[cy][cx+1]->setSalida(" ");
+                    posicionX = posicionX - 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY][posicionX+1] = new Item();
+                    matriz[posicionY][posicionX+1]->setSalida(" ");
                 }else if(condicion == 3){
-                    erase();
-                    break;
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
                 }
             }
 
-             if (direccion == 3 && (cx+1 <13))
+             if (direccion == 3 && (posicionX+1 <13))
             {
-                condicion = validacionMovimiento(matriz, cy  , cx+1);
+                condicion = validacionMovimiento(matriz, posicionY  , posicionX+1);
                 if(condicion == 1){
-                    cx = cx + 1;
-                    matriz[cy][cx] = jugador;
-                    matriz[cy][cx]->setSalida("*");
-                    matriz[cy][cx-1] = new Item();
-                    matriz[cy][cx-1]->setSalida(" ");
+                    posicionX = posicionX + 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY][posicionX-1] = new Item();
+                    matriz[posicionY][posicionX-1]->setSalida(" ");
                 }else if(condicion == 3){
-                    erase();
-                    break;
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
                 }
             }
-            if (direccion == 4 && (cy+1 <11) ){
-                condicion = validacionMovimiento(matriz, cy+1, cx);
+            if (direccion == 4 && (posicionY+1 <11) ){
+                condicion = validacionMovimiento(matriz, posicionY+1, posicionX);
                 if(condicion == 1){
-                    cy = cy + 1;
-                    matriz[cy][cx] = jugador;
-                    matriz[cy][cx]->setSalida("*");
-                    matriz[cy-1][cx] = new Item();
-                    matriz[cy-1][cx]->setSalida(" ");
+                    posicionY = posicionY + 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY-1][posicionX] = new Item();
+                    matriz[posicionY-1][posicionX]->setSalida(" ");
                 }else if(condicion == 3){
-                    erase();
-                    break;
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
+                    
                 }
+            }
+            pasos++;
+            move(0,45);
+            printw("Tiempo-Bombas");
+            move(1,45);
+            printw("%i", pasos);
+            refresh;
+            if(pasos==3){
+                explotarBombas(matriz);
+                impresion;
+                refresh;
+                pasos = 0;
             }
             
             movimientoVillanos(matriz);
             int elJugadorEsta;
             elJugadorEsta = verInstancia(matriz);
-            if(elJugadorEsta == 0){
+            if(elJugadorEsta == 0 ){
+                vida--;
+                
+            }
+
+            if(vida == 0){
                 break;
             }
+
+            
             impresion(matriz);
             refresh();
             
@@ -594,6 +625,10 @@ int validacionMovimiento(Item*** matriz , int x, int y){
         return 3;
     }
 
+    if(salida == "O"){
+        return 2;
+    }
+
     return 1;
 }
 
@@ -625,7 +660,7 @@ void movimientoVillanos(Item*** &matriz){
             if(matriz[i][j]->getSalida() == "X" ){
                 if(direccion== 1 && (i-1)>=0){
                     condicion = validacionMovimiento(matriz, i-1, j);
-                    if(condicion!=0 && condicion!=3){
+                    if(condicion!=0 && condicion!=3 && condicion!=2){
                         Item* temporal = matriz[i][j];
                         matriz[i-1][j] = temporal;
                         matriz[i][j] = new Item();
@@ -636,7 +671,7 @@ void movimientoVillanos(Item*** &matriz){
 
                 if(direccion== 2 && (j-1)>=0){
                     condicion = validacionMovimiento(matriz, i, j-1);
-                    if(condicion!=0 && condicion!=3){
+                    if(condicion!=0 && condicion!=3 && condicion!=2){
                         Item* temporal = matriz[i][j];
                         matriz[i][j-1] = temporal;
                         matriz[i][j] = new Item();
@@ -647,7 +682,7 @@ void movimientoVillanos(Item*** &matriz){
 
                 if(direccion== 3 && (j+1)<13){
                     condicion = validacionMovimiento(matriz, i, j+1);
-                    if(condicion!=0 && condicion!=3){
+                    if(condicion!=0 && condicion!=3 && condicion!=2){
                         Item* temporal = matriz[i][j];
                         matriz[i][j+1] = temporal;
                         matriz[i][j] = new Item();
@@ -658,7 +693,7 @@ void movimientoVillanos(Item*** &matriz){
 
                 if(direccion== 4 && (i+1)<11){
                     condicion = validacionMovimiento(matriz, i+1, j);
-                    if(condicion!=0 && condicion!=3){
+                    if(condicion!=0 && condicion!=3 && condicion!=2){
                         Item* temporal = matriz[i][j];
                         matriz[i+1][j] = temporal;
                         matriz[i][j] = new Item();
@@ -679,13 +714,64 @@ void movimientoVillanos(Item*** &matriz){
 }// el metodo
 
 
-/*int validacionJugador(Item*** matriz){
-    for(int i=0; i<11; i++ ){
+void explotarBombas(Item*** &matriz){
+    Bombas* bomba = NULL;
+    for(int i=0; i<11; i++){
         for(int j=0; j<13; j++){
-            
+            Item* tem = matriz[i][j];
+            bomba = dynamic_cast<Bombas*>(tem ); 
+	        if(bomba != NULL){
+                //move(i,60);
+                //printw("es bomba");
+
+                int condicion;
+                if(i-1>=0){
+                    condicion = validacionMovimiento(matriz, i-1,j);
+                    if(condicion !=2 && condicion!=0){
+                        matriz[i-1][j] = new Item();
+                        matriz[i-1][j]->setSalida(" ");
+                        matriz[i][j] = new Item();
+                        matriz[i][j]->setSalida(" ");
+                        impresion(matriz);
+                    }
+                }
+
+                if(i+1<11){
+                    condicion = validacionMovimiento(matriz, i+1,j);
+                    if(condicion !=2 && condicion!=0){
+                        matriz[i+1][j] = new Item();
+                        matriz[i+1][j]->setSalida(" ");
+                        matriz[i][j] = new Item();
+                        matriz[i][j]->setSalida(" ");
+                        impresion(matriz);
+                    }
+                }
+                
+                if(j+1<13){
+                    condicion = validacionMovimiento(matriz, i,j+1);
+                    if(condicion !=2 && condicion!=0){
+                        matriz[i][j+1] = new Item();
+                        matriz[i][j+1]->setSalida(" ");
+                        matriz[i][j] = new Item();
+                        matriz[i][j]->setSalida(" ");
+                        impresion(matriz);
+                    }
+                }
+
+                if(j-1>=0){
+                    condicion = validacionMovimiento(matriz, i,j-1);
+                    if(condicion !=2 && condicion!=0){
+                        matriz[i][j-1] = new Item();
+                        matriz[i][j-1]->setSalida(" ");
+                        matriz[i][j] = new Item();
+                        matriz[i][j]->setSalida(" ");
+                        impresion(matriz);
+                    }
+                }
+        	}
         }
     }
-}*/
+}
 
 
 
