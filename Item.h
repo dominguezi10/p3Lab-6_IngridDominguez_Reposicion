@@ -23,8 +23,9 @@ class Item{
         void setX(int);
         int getY();
         void setY(int);
-        string getSalida();
+        virtual string getSalida();
         void setSalida(string);
+
 
     ~Item();
 
