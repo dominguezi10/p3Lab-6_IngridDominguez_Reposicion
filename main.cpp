@@ -26,7 +26,7 @@ int kbhit(void);
 
 Jugador* crearJugador(int);
 int tipoBomba();
-void movimientoTren();
+void movimientoTren(Item***, Jugador*);
 void movimientoConMatriz(Item***, Jugador*, int);
 int validacionMovimiento(Item***, int, int);
 void impresion(Item***);
@@ -80,8 +80,10 @@ int main(void){
             //escenario->setNombre(nombreE);
             jugador = crearJugador(2);
 
+           
             escenario = new Tren(nombreE, 0,0);
-            movimientoTren();
+            Item*** matriz  = escenario->getMatriz();
+            movimientoTren(matriz, jugador);
             refresh();
             usleep(1000000);
             //movimiento();
@@ -244,93 +246,313 @@ void salir()
 
 
 
-void movimientoTren(){
+void movimientoTren(Item*** matriz, Jugador* jugador){
     erase();
-    char ser = '*';
-    int x, y;
-    int enX;
-    int enY;
-    getmaxyx(stdscr, y, x);
+    noecho();
+
+    //// los villanos
+    Jugador* villano1 = new Jugador("in",1,2, 0,12);
+    Jugador* villano2 = new Jugador("in",1,2, 10,12);
+    Jugador* villano3 = new Jugador("in",1,2, 5,6);
+    Jugador* villano4 = new Jugador("in",1,2, 10,0);
     
+    ///
+
+    //char ser = '*';
+    int x, y;
+    int posicionX;
+    int posicionY;
+    getmaxyx(stdscr, y, x);
+    move(y / 2, x / 2 - 18);
     start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    attron(COLOR_PAIR(1));
+    printw("Presione cualquier tecla para inciar.");
+    move(y / 2 + 1, x / 2 - 29);
+    printw("*Las bombas se muestra cuando presionas Enter!");
     refresh();
-    move(0,0);
-    printw("A JUGAR...... (MUEVETE!!)");
-    refresh();
-    int direccion = 3;
-    enX = 0;
-    enY = 2;
-    curs_set(0);
-    erase();
+    attroff(COLOR_PAIR(1));
     int tecla;
     tecla = getch();
-    while (true)
-    {
-        
-        if (kbhit())
-        {
-            tecla = getch();
-            //ARRIBA
-            if (tecla == 119)
-            {
-                direccion = 1;
+    while (tecla<=0){
+        tecla = getch();
+    }
+    
+    int direccion = 3;
+    posicionX = 0;
+    posicionY = 0;
+    curs_set(0);
+    erase();
+    matriz[0][0] = jugador;
+    matriz[0][0]->setSalida("*");
+
+    matriz[0][12] = villano1;
+    matriz[0][12]->setSalida("X");
+    matriz[10][12] = villano2;
+    matriz[10][12]->setSalida("X");
+    matriz[5][6] = villano3;
+    matriz[5][6]->setSalida("X");
+    matriz[10][0] = villano4;
+    matriz[10][0]->setSalida("X");
+
+    int bombasAPoner;
+    bombasAPoner = rand()%3+1;
+
+    for(int i=0; i<11; i++){
+        for(int j = 0; j<13; j++){
+            if (( j%2!=0 && i%2!=0)){    
+                matriz[i][j]->setSalida("@");
             }
-            //IZQUIERDA
-            if (tecla == 97)
-            {
-                direccion = 2;
-            }
-            //DERECHA
-            if (tecla == 100)
-            {
-                direccion = 3;
-            }
-            //ABAJO
-            if (tecla == 115)
-            {
-                direccion = 4;
-            }
-            
-        }
-        if ((enX > -1 && enY > 1) && (enX < 13 && enY < 11))
-        {
-            move(enY, enX);
-            printw("*");
-            refresh();
-            usleep(1000000 / 4);
-            if (direccion == 1)
-            {
-                enY = enY - 1;
-                move(enY + 1, enX);
-                printw(" ");
-            }
-            if (direccion == 2)
-            {
-                enX = enX - 1;
-                move(enY, enX + 1);
-                printw(" ");
-            }
-            if (direccion == 3)
-            {
-                enX = enX + 1;
-                move(enY, enX - 1);
-                printw(" ");
-            }
-            if (direccion == 4)
-            {
-                enY = enY + 1;
-                move(enY - 1, enX);
-                printw(" ");
-            }
-        }
-        else
-        {
-            break;
         }
     }
+
+    
+
+    move(0,20);
+    printw("Vidas");
+    
+    int vida = rand()%3+1;
+    move(1,20);
+    printw("%i", vida);
+    
+    int condicionBomba;
+    condicionBomba = 0;
+    int pasos;
+    pasos = 0;
+    
+    int condicionJuego;
+    while (true){
+        refresh();
+        impresion(matriz);
+
+
+        refresh();
+        
+        tecla = getch();
+            //ARRIBA
+        if (tecla == 119){
+            direccion = 1;
+        }
+        //IZQUIERDA
+        if (tecla == 97){
+            direccion = 2;
+        }
+        //DERECHA
+        if (tecla == 100){
+            direccion = 3;
+        }
+        //ABAJO
+        if (tecla == 115){
+            direccion = 4;
+        }
+
+        if(tecla==10 && condicionBomba == 0){
+            
+            if( ( (posicionX >=0 && posicionY >=0) && (posicionX < 13 && posicionY < 11) ) ){
+                matriz[posicionY][posicionX] = new Item();
+                Item* normal = new Normal(posicionY, posicionX);
+                matriz[posicionY][posicionX] = normal;
+                matriz[posicionY][posicionX]->setSalida("O");
+
+                int indicador;
+                int contadorEnemigos;
+                contadorEnemigos = 0;
+                indicador = 0;
+                int condicion;
+                if(posicionY+1<11){
+                    condicion = validacionMovimiento(matriz, posicionY+1, posicionX);
+                    if(condicion== 1){
+                        posicionY = posicionY+1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                        
+                    }
+                }
+                
+                if(posicionY-1>=0 && indicador == 0){
+                    condicion = validacionMovimiento(matriz, posicionY-1, posicionX);
+                    if(condicion== 1){
+                        posicionY = posicionY-1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                    }else{
+                        indicador = 0;
+                    }
+                }
+
+                if(posicionX-1>=0 && indicador == 0){
+                    condicion = validacionMovimiento(matriz, posicionY, posicionX-1);
+                    if(condicion== 1){
+                        posicionX = posicionX-1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                    }else{
+                        indicador = 0;
+                    }
+                }
+
+                if(posicionX+1<13 && indicador == 0){
+                    condicion = validacionMovimiento(matriz, posicionY, posicionX+1);
+                    if(condicion== 1){
+                        posicionX  = posicionX+1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                    }else{
+                        indicador = 0;
+                    }
+                }
+
+                contadorEnemigos = gane(matriz);
+                move(20,10);
+            printw("%i", contadorEnemigos);
+                if(contadorEnemigos == 0){
+                    condicionJuego = 1;
+                    break;
+                }
+            impresion(matriz);
+            //refresh;
+            }
+
+            condicionBomba = 1;
+        }
+            
+            
+        
+
+        
+
+        int condicion;
+        if ( ( (posicionX >=0 && posicionY >=0) && (posicionX < 13 && posicionY < 11) )   && (direccion>=1 && direccion<=4) ){
+            if(direccion == 1  && (posicionY-1 >=0) ){
+                condicion = validacionMovimiento(matriz,(posicionY - 1) , posicionX);
+                if(condicion == 1){
+                    posicionY = posicionY - 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY+1][posicionX] = new Item();
+                    matriz[posicionY+1][posicionX]->setSalida(" ");
+                    
+                    
+                }else if(condicion == 3){
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
+                    
+                }
+            }
+
+            if(direccion == 2  && (posicionX-1 >=0) ){
+                condicion = validacionMovimiento(matriz, posicionY  , posicionX-1);
+                if(condicion == 1){
+                    posicionX = posicionX - 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY][posicionX+1] = new Item();
+                    matriz[posicionY][posicionX+1]->setSalida(" ");
+                }else if(condicion == 3){
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
+                }
+            }
+
+             if (direccion == 3 && (posicionX+1 <13))
+            {
+                condicion = validacionMovimiento(matriz, posicionY  , posicionX+1);
+                if(condicion == 1){
+                    posicionX = posicionX + 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY][posicionX-1] = new Item();
+                    matriz[posicionY][posicionX-1]->setSalida(" ");
+                }else if(condicion == 3){
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
+                }
+            }
+            if (direccion == 4 && (posicionY+1 <11) ){
+                condicion = validacionMovimiento(matriz, posicionY+1, posicionX);
+                if(condicion == 1){
+                    posicionY = posicionY + 1;
+                    matriz[posicionY][posicionX] = jugador;
+                    matriz[posicionY][posicionX]->setSalida("*");
+                    matriz[posicionY-1][posicionX] = new Item();
+                    matriz[posicionY-1][posicionX]->setSalida(" ");
+                }else if(condicion == 3){
+                    vida--;
+                    move(0,20);
+                    printw("Vidas");
+    
+                    move(1,20);
+                    printw("%i", vida);
+                    
+                }
+            }
+            
+            if(condicionBomba == 1){
+                pasos++;
+                move(0,45);
+                printw("Tiempo-Bombas");
+                move(1,45);
+                printw("%i", pasos);
+                refresh;
+            }
+
+            if(pasos==3){
+                condicionBomba = 0;
+                explotarBombas(matriz);
+                impresion;
+                refresh;
+                pasos = 0;
+                move(0,45);
+                printw("Tiempo-Bombas");
+                move(1,45);
+                printw("%i", pasos);
+            }
+            
+            movimientoVillanos(matriz);
+            int elJugadorEsta;
+            elJugadorEsta = verInstancia(matriz);
+            if(elJugadorEsta == 0 ){
+                vida--;
+                
+            }
+
+            if(vida == 0){
+                break;
+            }
+
+            
+            impresion(matriz);
+            refresh();
+            
+        }
+
+        direccion = 0;
+        impresion(matriz);
+        refresh();
+        
+    }
     move(y / 2, (x / 2 - 4));
-    printw("Perdió!!");
+    if(condicionJuego == 1){
+        printw("Ganastes!!!");
+    }else {
+        printw("Perdió!!");
+    }
     refresh();
     usleep(1000000 / 2);
     curs_set(1);
