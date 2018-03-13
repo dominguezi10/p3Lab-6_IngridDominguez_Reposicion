@@ -33,6 +33,7 @@ void impresion(Item***);
 void movimientoVillanos(Item***&);
 int verInstancia(Item***);
 void explotarBombas(Item***&);
+int gane(Item***);
 
 int main(void){
     
@@ -365,7 +366,7 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
     attron(COLOR_PAIR(1));
     printw("Presione cualquier tecla para inciar.");
     move(y / 2 + 1, x / 2 - 29);
-    printw("*Las teclas sólo funcionarán sin no está activo BLOQ MAYUS*");
+    printw("*Las bombas se muestra cuando presionas Enter!");
     refresh();
     attroff(COLOR_PAIR(1));
     int tecla;
@@ -443,9 +444,12 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
     move(1,20);
     printw("%i", vida);
     
-
+    int condicionBomba;
+    condicionBomba = 1;
     int pasos;
     pasos = 0;
+    
+    int condicionJuego;
     while (true){
         refresh();
         impresion(matriz);
@@ -471,6 +475,82 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
             direccion = 4;
         }
 
+        if(tecla==10 && condicionBomba == 0){
+            
+            if( ( (posicionX >=0 && posicionY >=0) && (posicionX < 13 && posicionY < 11) ) ){
+                matriz[posicionY][posicionX] = new Item();
+                Item* normal = new Normal(posicionY, posicionX);
+                matriz[posicionY][posicionX] = normal;
+                matriz[posicionY][posicionX]->setSalida("O");
+
+                int indicador;
+                int contadorEnemigos;
+                contadorEnemigos = 0;
+                indicador = 0;
+                int condicion;
+                if(posicionY+1<11){
+                    condicion = validacionMovimiento(matriz, posicionY+1, posicionX);
+                    if(condicion== 1){
+                        posicionY = posicionY+1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                        
+                    }
+                }
+                
+                if(posicionY-1>=0 && indicador == 0){
+                    condicion = validacionMovimiento(matriz, posicionY-1, posicionX);
+                    if(condicion== 1){
+                        posicionY = posicionY-1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                    }else{
+                        indicador = 0;
+                    }
+                }
+
+                if(posicionX-1>=0 && indicador == 0){
+                    condicion = validacionMovimiento(matriz, posicionY, posicionX-1);
+                    if(condicion== 1){
+                        posicionX = posicionX-1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                    }else{
+                        indicador = 0;
+                    }
+                }
+
+                if(posicionX+1<13 && indicador == 0){
+                    condicion = validacionMovimiento(matriz, posicionY, posicionX+1);
+                    if(condicion== 1){
+                        posicionX  = posicionX+1;
+                        matriz[posicionY][posicionX] = jugador;
+                        matriz[posicionY][posicionX]->setSalida("*");
+                        indicador++;
+                    }else{
+                        indicador = 0;
+                    }
+                }
+
+                contadorEnemigos = gane(matriz);
+                move(20,10);
+            printw("%i", contadorEnemigos);
+                if(contadorEnemigos == 0){
+                    condicionJuego = 1;
+                    break;
+                }
+            impresion(matriz);
+            //refresh;
+            }
+
+            condicionBomba = 1;
+        }
+            
+            
+        
 
         
 
@@ -551,17 +631,26 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
                     
                 }
             }
-            pasos++;
-            move(0,45);
-            printw("Tiempo-Bombas");
-            move(1,45);
-            printw("%i", pasos);
-            refresh;
+            
+            if(condicionBomba == 1){
+                pasos++;
+                move(0,45);
+                printw("Tiempo-Bombas");
+                move(1,45);
+                printw("%i", pasos);
+                refresh;
+            }
+
             if(pasos==3){
+                condicionBomba = 0;
                 explotarBombas(matriz);
                 impresion;
                 refresh;
                 pasos = 0;
+                move(0,45);
+                printw("Tiempo-Bombas");
+                move(1,45);
+                printw("%i", pasos);
             }
             
             movimientoVillanos(matriz);
@@ -588,7 +677,11 @@ void movimientoConMatriz(Item***  matriz, Jugador* jugador, int opcionBomba){
         
     }
     move(y / 2, (x / 2 - 4));
-    printw("Perdió!!");
+    if(condicionJuego == 1){
+        printw("Ganastes!!!");
+    }else {
+        printw("Perdió!!");
+    }
     refresh();
     usleep(1000000 / 2);
     curs_set(1);
@@ -773,7 +866,19 @@ void explotarBombas(Item*** &matriz){
     }
 }
 
+int gane(Item*** matriz){
+    int contador;
+    contador = 0;
+    for(int i =0; i<11; i++){
+        for(int j=0; j<13; j++ ){
+            if(matriz[i][j]->getSalida()== "X"){
+                contador++;
+            }
+        }
+    }
 
+    return contador;
+}
 
 int kbhit(void)
 {
